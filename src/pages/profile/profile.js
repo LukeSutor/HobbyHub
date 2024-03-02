@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../AppContext";
-import { getUser, getHobbies } from "../../functions";
+import { getProfileInfo } from "../../functions";
 
 export default function Profile() {
   const [newHobbyName, setNewHobbyName] = useState("");
@@ -9,14 +9,11 @@ export default function Profile() {
 
   useEffect(() => {
     // Attempt to get user and redirect if failed
-    getUser(supabase, user, setUser).then((res) => {
+    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then((res) => {
       if (!res) {
         window.location.href = "/login";
       }
     });
-
-    // Attempt to get hobbies
-    getHobbies(supabase, user, hobbies, setHobbies);
   }, []);
 
   async function handeAddHobby(event) {
@@ -25,6 +22,12 @@ export default function Profile() {
     // Check if hobby already exists
     if (hobbies.find((hobby) => hobby.name === newHobbyName)) {
       alert("Hobby already exists");
+      return;
+    }
+
+    // Check if skill level is in range [0, 5]
+    if (newHobbySkillLevel < 0 || newHobbySkillLevel > 5) {
+      alert("Skill level must be in range [0, 5]");
       return;
     }
 

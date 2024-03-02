@@ -44,3 +44,115 @@ export async function getHobbies(supabase, user, hobbies, setHobbies) {
     console.log(error.message);
   }
 }
+
+export async function getProfileInfo(
+  supabase,
+  user,
+  setUser,
+  hobbies,
+  setHobbies,
+) {
+  let signed_in = getUser(supabase, user, setUser);
+
+  if (signed_in) {
+    getHobbies(supabase, user, hobbies, setHobbies);
+  }
+
+  return signed_in;
+}
+
+export async function getMatches(supabase, user, hobbies) {
+  if (hobbies.length === 0 || !user) {
+    return [];
+  }
+
+  let hobby_list = hobbies.map((hobby) => hobby.name);
+  let matching_hobbies = [];
+
+  try {
+    const { data, error } = await supabase
+      .from("hobbies")
+      .select("user_id")
+      .in("name", hobby_list)
+      .neq("user_id", user.id);
+
+    if (error) {
+      console.log(error);
+      return [];
+    }
+
+    matching_hobbies = data.map((match) => match.user_id);
+  } catch (error) {
+    console.log(error.message);
+    return [];
+  }
+
+  console.log(matching_hobbies);
+
+  if (matching_hobbies.length === 0) {
+    return [];
+  }
+
+  // Get user info for each match
+  let matches = [];
+  let match_uids = [];
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select()
+      .in("id", matching_hobbies);
+
+    if (error) {
+      console.log(error);
+      return [];
+    }
+
+    matches = data;
+    match_uids = data.map((match) => match.id);
+  } catch (error) {
+    console.log(error.message);
+    return [];
+  }
+
+  if (match_uids.length === 0) {
+    return [];
+  }
+
+  // Get the hobbies for all matches
+  let match_hobbies = [];
+  try {
+    const { data, error } = await supabase
+      .from("hobbies")
+      .select()
+      .in("user_id", match_uids);
+
+    if (error) {
+      console.log(error);
+      return [];
+    }
+
+    match_hobbies = data;
+  } catch (error) {
+    console.log(error.message);
+    return [];
+  }
+
+  // Add each hobby's name and skill to each match
+  for (let i = 0; i < matches.length; i++) {
+    let match = matches[i];
+    let match_id = match.id;
+    let filtered_matches = match_hobbies.filter(
+      (hobby) => hobby.user_id === match_id,
+    );
+    let trimmed_hobbies = [];
+
+    for (let j = 0; j < filtered_matches.length; j++) {
+      let hobby = filtered_matches[j];
+      trimmed_hobbies[j] = { name: hobby.name, skill: hobby.skill };
+    }
+
+    matches[i].hobbies = trimmed_hobbies;
+  }
+
+  return matches;
+}
