@@ -3,7 +3,7 @@
 export async function getUser(supabase, user, setUser) {
   // check if user is null
   if (user) {
-    return true;
+    return user;
   }
 
   try {
@@ -12,14 +12,14 @@ export async function getUser(supabase, user, setUser) {
 
     if (error) {
       console.log(error);
-      return false;
+      return null;
     }
 
     setUser(data.user);
-    return true;
+    return data.user;
   } catch (error) {
     console.log(error.message);
-    return false;
+    return null;
   }
 }
 
@@ -52,13 +52,14 @@ export async function getProfileInfo(
   hobbies,
   setHobbies,
 ) {
-  let signed_in = getUser(supabase, user, setUser);
+  let usr = await getUser(supabase, user, setUser);
 
-  if (signed_in) {
-    getHobbies(supabase, user, hobbies, setHobbies);
+  if (usr) {
+    await getHobbies(supabase, usr, hobbies, setHobbies);
+    return true;
   }
 
-  return signed_in;
+  return false;
 }
 
 export async function getMatches(supabase, user, hobbies) {
@@ -86,8 +87,6 @@ export async function getMatches(supabase, user, hobbies) {
     console.log(error.message);
     return [];
   }
-
-  console.log(matching_hobbies);
 
   if (matching_hobbies.length === 0) {
     return [];

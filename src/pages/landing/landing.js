@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../AppContext";
-import { getProfileInfo, getMatches } from "../../functions";
+import {
+  getUser,
+  getHobbies,
+  getProfileInfo,
+  getMatches,
+} from "../../functions";
 
 export default function Landing() {
   const [loading, setLoading] = useState(true);
@@ -19,7 +24,6 @@ export default function Landing() {
     // Attempt to get matches
     getMatches(supabase, user, hobbies).then((data) => {
       setMatches(data);
-      console.log(data);
     });
   }
 
