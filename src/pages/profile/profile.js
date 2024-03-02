@@ -1,22 +1,66 @@
 import React, { useState, useEffect } from "react";
-
 import { useAppContext } from "../../AppContext";
+import { getUser, getHobbies } from "../../functions";
 
 export default function Profile() {
-  const { user, hobbies, setHobbies, supabase } = useAppContext();
+  const [newHobbyName, setNewHobbyName] = useState("");
+  const [newHobbySkillLevel, setNewHobbySkillLevel] = useState(0);
+  const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
 
-  // Redirect to login if not logged in
   useEffect(() => {
-    if (!user) {
-      window.location.href = "/login";
-    }
-  }, [user]);
+    // Attempt to get user and redirect if failed
+    getUser(supabase, user, setUser).then((res) => {
+      if (!res) {
+        window.location.href = "/login";
+      }
+    });
 
-  function handleDeleteHobby(id) {
-    setHobbies(hobbies.filter((hobby) => hobby.id !== id));
+    // Attempt to get hobbies
+    getHobbies(supabase, user, hobbies, setHobbies);
+  }, []);
+
+  async function handeAddHobby(event) {
+    event.preventDefault();
+
+    // Check if hobby already exists
+    if (hobbies.find((hobby) => hobby.name === newHobbyName)) {
+      alert("Hobby already exists");
+      return;
+    }
+
+    supabase
+      .from("hobbies")
+      .insert([
+        { name: newHobbyName, skill: newHobbySkillLevel, user_id: user.id },
+      ])
+      .select()
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          return;
+        }
+        // Add domain to domains
+        setHobbies([...hobbies, data.data[0]]);
+      });
   }
 
-  console.log(user);
+  async function handleDeleteHobby(name) {
+    setHobbies(hobbies.filter((hobby) => hobby.name !== name));
+
+    supabase
+      .from("hobbies")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("name", name)
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+          return;
+        }
+        // Remove domain from domains
+        setHobbies(hobbies.filter((hobby) => hobby.name !== name));
+      });
+  }
 
   return (
     <div>
@@ -25,12 +69,36 @@ export default function Profile() {
       <h3>Your hobbies:</h3>
       <ul>
         {hobbies.map((hobby) => (
-          <li key={hobby.id}>
+          <li key={hobby.name}>
             {hobby.name}{" "}
-            <button onClick={() => handleDeleteHobby(hobby.id)}>Delete</button>
+            <button onClick={() => handleDeleteHobby(hobby.name)}>
+              Delete
+            </button>
           </li>
         ))}
       </ul>
+      <p>add hobby</p>
+      <form onSubmit={handeAddHobby}>
+        <label>
+          Hobby:
+          <input
+            type="text"
+            name="hobby"
+            onChange={(e) => setNewHobbyName(e.target.value)}
+          />
+        </label>
+        <label>
+          Skill Level:
+          <input
+            type="number"
+            name="skillLevel"
+            onChange={(e) => setNewHobbySkillLevel(e.target.value)}
+          />
+        </label>
+        <button type="submit" onClick={handeAddHobby}>
+          Add
+        </button>
+      </form>
     </div>
   );
 }

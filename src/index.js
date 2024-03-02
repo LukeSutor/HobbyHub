@@ -17,7 +17,7 @@ import Profile from "./pages/profile/profile";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
+  <>
     <AppProvider>
       <BrowserRouter>
         <Navbar />
@@ -30,7 +30,7 @@ root.render(
         <Footer />
       </BrowserRouter>
     </AppProvider>
-  </React.StrictMode>,
+  </>,
 );
 
 // If you want to start measuring performance in your app, pass a function
