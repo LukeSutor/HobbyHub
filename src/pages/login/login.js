@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../AppContext";
+import "./login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,27 +19,29 @@ export default function Login() {
   }
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form>
-        <label>
-          Email:
+    <div className="container rounded-4">
+      <h1 className="login-text">Welcome Back</h1>
+      <form className="label-container d-grid gap-2">
+        <label className="email">
           <input
             type="email"
             name="email"
+            className="rounded form-control input-group mb-3\"
+            placeholder="Email Address"
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
         <label>
-          Password:
           <input
             type="password"
             name="password"
+            className="rounded form-control col-form-label input-group mb-3"
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
           />
         </label>
-        <button type="submit" onClick={handleLogin}>
-          Submit
+        <button type="submit" className="btn btn-primary" onClick={handleLogin}>
+          Login
         </button>
       </form>
     </div>

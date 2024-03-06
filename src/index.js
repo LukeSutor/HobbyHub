@@ -5,6 +5,7 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
+import "bootstrap/dist/css/bootstrap.css";
 
 // Import context
 import { AppProvider } from "./AppContext";

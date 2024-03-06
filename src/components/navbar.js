@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../AppContext";
+import "./navbar.css";
 
 export default function Footer() {
   const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();

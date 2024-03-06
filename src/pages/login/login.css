@@ -1,0 +1,13 @@
+.container {
+  background-color: #f5f5f5;
+  padding: 2%;
+  width: auto;
+  width: 30%;
+  background-color: green;
+}
+.login-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
