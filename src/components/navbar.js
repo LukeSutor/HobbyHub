@@ -12,29 +12,32 @@ export default function Footer() {
   };
 
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/signup">Signup</Link>
-          </li>
+    <div className="navbar-container">
+      <nav className="navbar">
+        <div className="container-fluid justify-content-end">
+          <Link to="/" className="nav-link links">
+            Home
+          </Link>
+          <Link to="/login" className="nav-link links">
+            Login
+          </Link>
+          <Link to="/signup" className="nav-link links">
+            Signup
+          </Link>
+          <Link to="/profile" className="nav-link links">
+            Profile
+          </Link>
           {user && (
             <div>
+              <li></li>
               <li>
-                <Link to="/profile">Profile</Link>
-              </li>
-              <li>
-                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleLogout} className="nav-link links">
+                  Logout
+                </button>
               </li>
             </div>
           )}
-        </ul>
+        </div>
       </nav>
     </div>
   );
