@@ -15,6 +15,7 @@ import Landing from "./pages/landing/landing";
 import Login from "./pages/login/login";
 import Signup from "./pages/signup/signup";
 import Profile from "./pages/profile/profile";
+import Matches from "./pages/matches/matches";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,6 +28,7 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/matches" element={<Matches />} />
         </Routes>
         <Footer />
       </BrowserRouter>

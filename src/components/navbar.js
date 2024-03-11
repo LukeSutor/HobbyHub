@@ -25,10 +25,15 @@ export default function Footer() {
             Signup
           </Link>
           {user && (
-            <div className="justify-content-end">
-              <li>
+            <div className="row align-items-start justify-items-end">
+              <li className="col">
                 <Link to="/profile" className="nav-link links">
                   Profile
+                </Link>
+              </li>
+              <li>
+                <Link to="/matches" className="nav-link links">
+                  Matches
                 </Link>
               </li>
               <li>

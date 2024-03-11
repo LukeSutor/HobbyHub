@@ -27,9 +27,14 @@ export default function Landing() {
       return;
     }
 
-    const { data, error } = await supabase.functions.invoke('get_matches', {
-      body: { user: user, hobbies: hobbies, amount: fetchNumber, offset: offset }
-    })
+    const { data, error } = await supabase.functions.invoke("get_matches", {
+      body: {
+        user: user,
+        hobbies: hobbies,
+        amount: fetchNumber,
+        offset: offset,
+      },
+    });
 
     if (error) {
       console.log(error);
@@ -38,6 +43,27 @@ export default function Landing() {
 
     setMatches([...matches, ...data]);
     setOffset(offset + fetchNumber);
+  }
+
+  async function createMatch(match_id) {
+    if (!user) {
+      return;
+    }
+
+    const { data, error } = await supabase.functions.invoke("create_match", {
+      body: { user_id: user.id, match_id: match_id },
+    });
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    if (data.operation == "full_match_created") {
+      console.log("Full match created");
+    } else {
+      console.log("Partial match created");
+    }
   }
 
   // Loading landing page
@@ -60,16 +86,15 @@ export default function Landing() {
       <div>
         <h1>Authenticated landing page</h1>
         {/* Display matches */}
-        {matches.length === 0 ? 
-          <h2>No matches</h2> 
-          : 
+        {matches.length === 0 ? (
+          <h2>No matches</h2>
+        ) : (
           <ul>
             {matches.map((match) => {
               return (
                 <li key={match.id}>
                   <h2>{match.email}</h2>
                   <ul>
-                    {/* {match.hobbies[0].name} */}
                     {match.hobbies.map((hobby) => {
                       return (
                         <li key={hobby.name}>
@@ -79,12 +104,17 @@ export default function Landing() {
                       );
                     })}
                   </ul>
+                  <button onClick={() => createMatch(match.id)}>
+                    Create Match with {match.email.split("@")[0]}
+                  </button>
                 </li>
               );
             })}
           </ul>
-        }
-        <button onClick={getMatches}>{matches.length === 0 ? "Get Matches" : "More Matches"}</button>
+        )}
+        <button onClick={getMatches}>
+          {matches.length === 0 ? "Get Matches" : "More Matches"}
+        </button>
       </div>
     );
   }
