@@ -8,8 +8,10 @@ import {
 } from "../../functions";
 
 export default function Landing() {
+  const fetchNumber = 10; // Number of matches to fetch with each request
   const [loading, setLoading] = useState(true);
   const [matches, setMatches] = useState([]);
+  const [offset, setOffset] = useState(0); // Stores offset of new matches to fetch
   const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
 
   useEffect(() => {
@@ -20,11 +22,22 @@ export default function Landing() {
     });
   }, []);
 
-  async function handleGetMatches() {
-    // Attempt to get matches
-    getMatches(supabase, user, hobbies).then((data) => {
-      setMatches(data);
-    });
+  async function getMatches() {
+    if (!user) {
+      return;
+    }
+
+    const { data, error } = await supabase.functions.invoke('get_matches', {
+      body: { user: user, hobbies: hobbies, amount: fetchNumber, offset: offset }
+    })
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setMatches([...matches, ...data]);
+    setOffset(offset + fetchNumber);
   }
 
   // Loading landing page
@@ -46,27 +59,32 @@ export default function Landing() {
     return (
       <div>
         <h1>Authenticated landing page</h1>
-        <button onClick={handleGetMatches}>Get matches</button>
-        <ul>
-          {matches.map((match) => {
-            return (
-              <li key={match.id}>
-                <h2>{match.email}</h2>
-                <ul>
-                  {/* {match.hobbies[0].name} */}
-                  {match.hobbies.map((hobby) => {
-                    return (
-                      <li key={hobby.name}>
-                        <p>Name: {hobby.name}</p>
-                        <p>Skill level: {hobby.skill}</p>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-            );
-          })}
-        </ul>
+        {/* Display matches */}
+        {matches.length === 0 ? 
+          <h2>No matches</h2> 
+          : 
+          <ul>
+            {matches.map((match) => {
+              return (
+                <li key={match.id}>
+                  <h2>{match.email}</h2>
+                  <ul>
+                    {/* {match.hobbies[0].name} */}
+                    {match.hobbies.map((hobby) => {
+                      return (
+                        <li key={hobby.name}>
+                          <p>Name: {hobby.name}</p>
+                          <p>Skill level: {hobby.skill}</p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              );
+            })}
+          </ul>
+        }
+        <button onClick={getMatches}>{matches.length === 0 ? "Get Matches" : "More Matches"}</button>
       </div>
     );
   }

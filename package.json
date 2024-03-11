@@ -50,6 +50,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "gh-pages": "^6.1.1",
-    "prettier": "^3.2.4"
+    "prettier": "^3.2.4",
+    "supabase": "^1.148.6"
   }
 }

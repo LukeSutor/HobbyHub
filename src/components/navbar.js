@@ -24,12 +24,13 @@ export default function Footer() {
           <Link to="/signup" className="nav-link links">
             Signup
           </Link>
-          <Link to="/profile" className="nav-link links">
-            Profile
-          </Link>
           {user && (
-            <div>
-              <li></li>
+            <div className="justify-content-end">
+              <li>
+                <Link to="/profile" className="nav-link links">
+                  Profile
+                </Link>
+              </li>
               <li>
                 <button onClick={handleLogout} className="nav-link links">
                   Logout
