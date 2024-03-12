@@ -15,8 +15,12 @@ export default function Footer() {
       <h1 className="text-2xl">Hobby Hub</h1>
       <div className="flex flex-row items-center space-x-8">
         <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/signup">Signup</Link>
+        {(user === null || user === undefined) && (
+          <Link to="/login">Login</Link>
+        )}
+        {(user === null || user === undefined) && (
+          <Link to="/signup">Signup</Link>
+        )}
         {user && (
           <div className="flex flex-row space-x-8">
             <Link to="/profile" className="">
