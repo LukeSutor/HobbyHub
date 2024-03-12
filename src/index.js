@@ -10,11 +10,11 @@ import Footer from "./components/footer";
 import { AppProvider } from "./AppContext";
 
 // Import pages
-import Landing from "./pages/landing/landing";
-import Login from "./pages/login/login";
-import Signup from "./pages/signup/signup";
-import Profile from "./pages/profile/profile";
-import Matches from "./pages/matches/matches";
+import Landing from "./pages/landing";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import Profile from "./pages/profile";
+import Matches from "./pages/matches";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

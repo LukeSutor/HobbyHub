@@ -11,39 +11,30 @@ export default function Footer() {
   };
 
   return (
-    <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/signup">Signup</Link>
-          </li>
-          {user && (
-            <div className="row align-items-start justify-items-end">
-              <li className="col">
-                <Link to="/profile" className="nav-link links">
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link to="/matches" className="nav-link links">
-                  Matches
-                </Link>
-              </li>
-              <li>
-                <button onClick={handleLogout} className="nav-link links">
-                  Logout
-                </button>
-              </li>
-            </div>
-          )}
-        </ul>
-      </nav>
-    </div>
+    <nav className="flex flex-row justify-between py-4 px-12 shadow">
+      <h1 className="text-2xl">Hobby Hub</h1>
+      <div className="flex flex-row items-center space-x-8">
+        <Link to="/">Home</Link>
+        {(user === null || user === undefined) && (
+          <Link to="/login">Login</Link>
+        )}
+        {(user === null || user === undefined) && (
+          <Link to="/signup">Signup</Link>
+        )}
+        {user && (
+          <div className="flex flex-row space-x-8">
+            <Link to="/profile" className="">
+              Profile
+            </Link>
+            <Link to="/matches" className="">
+              Matches
+            </Link>
+            <button onClick={handleLogout} className="">
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    </nav>
   );
 }
