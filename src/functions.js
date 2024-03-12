@@ -15,7 +15,7 @@ export async function getUser(supabase, user, setUser) {
       return null;
     }
 
-    setUser(data.user);
+    await setUser(data.user);
     return data.user;
   } catch (error) {
     console.log(error.message);
@@ -70,7 +70,7 @@ export async function getMatchedUsers(supabase, user, setMatches) {
   // Fetch all full matches where user1_id or user2_id is equal to the current user
   const { data, error } = await supabase
     .from("full-matches")
-    .select()
+    .select("*, user1: user1_id(*), user2: user2_id(*)")
     .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`);
 
   if (error) {
@@ -78,37 +78,55 @@ export async function getMatchedUsers(supabase, user, setMatches) {
     return [];
   }
 
-  console.log("data", data);
-
-  if (data.length === 0) {
-    return [];
-  }
-
-  // Loop through matches and extract user ids that arent equal to the current user
-  let matches = data.map((match) => {
-    if (match.user1_id !== user.id) {
-      return match.user1_id;
-    } else {
-      return match.user2_id;
+  // Remove user from matches
+  const matches = data.filter((match) => {
+    if (match.user1_id.id === user.id) {
+      return match.user2;
     }
+    return match.user1;
   });
 
-  console.log("matches", matches);
-
-  // Fetch all users that are in matches
-  const { user_data, user_error } = await supabase
-    .from("users")
-    .select("email")
-    .eq("id", matches[0]);
-  // .in("id", matches);
-
-  if (user_error) {
-    console.log(user_error);
-    return [];
+  // Loop through matches and remove user object that is the current user
+  for (let i = 0; i < matches.length; i++) {
+    if (matches[i].user1.id === user.id) {
+      matches[i].user = matches[i].user2;
+      delete matches[i].user1;
+      delete matches[i].user2;
+    } else {
+      matches[i].user = matches[i].user1;
+      delete matches[i].user1;
+      delete matches[i].user2;
+    }
   }
 
-  console.log("user_data", user_data);
+  setMatches(matches);
+}
 
-  setMatches(user_data);
-  return user_data;
+export async function unmatchUser(supabase, user, match_id) {
+  if (!user) {
+    return;
+  }
+
+  // Delete match from full-matches
+  const { data, error } = await supabase
+    .from("full-matches")
+    .delete()
+    .or(`user1_id.eq.${user.id},user2_id.eq.${match_id}`)
+    .or(`user1_id.eq.${match_id},user2_id.eq.${user.id}`);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  // Delete match from partial-matches
+  const { data: partial_data, error: partial_error } = await supabase
+    .from("partial-matches")
+    .delete()
+    .eq("sender_id", user.id);
+
+  if (partial_error) {
+    console.log(partial_error);
+    return;
+  }
 }

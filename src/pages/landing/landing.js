@@ -41,6 +41,8 @@ export default function Landing() {
       return;
     }
 
+    console.log(data);
+
     setMatches([...matches, ...data]);
     setOffset(offset + fetchNumber);
   }
@@ -61,8 +63,10 @@ export default function Landing() {
 
     if (data.operation == "full_match_created") {
       console.log("Full match created");
-    } else {
+    } else if (data.operation == "partial_match_created") {
       console.log("Partial match created");
+    } else {
+      console.log("Match already exists");
     }
   }
 

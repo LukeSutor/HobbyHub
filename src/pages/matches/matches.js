@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../AppContext";
-import { getProfileInfo, getMatchedUsers } from "../../functions";
+import { getProfileInfo, getMatchedUsers, unmatchUser } from "../../functions";
 
 export default function Matches() {
   const [loading, setLoading] = useState(true);
@@ -10,10 +10,15 @@ export default function Matches() {
   useEffect(() => {
     setLoading(true);
     // Attempt to get user
-    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() => {
-      fetchMatches().then(() => setLoading(false));
-    });
+    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() =>
+      setLoading(false),
+    );
   }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchMatches().then(() => setLoading(false));
+  }, [user]);
 
   async function fetchMatches() {
     if (!user) {
@@ -21,6 +26,15 @@ export default function Matches() {
     }
 
     await getMatchedUsers(supabase, user, setMatches);
+  }
+
+  async function deleteMatch(match_id) {
+    if (!user) {
+      return;
+    }
+
+    await unmatchUser(supabase, user, match_id);
+    setMatches(matches.filter((match) => match.id !== match_id));
   }
 
   return (
@@ -31,9 +45,9 @@ export default function Matches() {
       {matches &&
         matches.map((match, index) => (
           <div key={index}>
-            <p>{match.name}</p>
-            <p>{match.email}</p>
-            <p>{match.hobbies}</p>
+            <p>{match.user.email}</p>
+            <p>id: {match.user.id}</p>
+            <button onClick={() => deleteMatch(match.id)}>Unmatch</button>
           </div>
         ))}
     </div>

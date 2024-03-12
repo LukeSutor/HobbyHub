@@ -5,7 +5,6 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
-import "bootstrap/dist/css/bootstrap.css";
 
 // Import context
 import { AppProvider } from "./AppContext";
@@ -22,15 +21,19 @@ root.render(
   <>
     <AppProvider>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/matches" element={<Matches />} />
-        </Routes>
-        <Footer />
+        <main className="min-h-screen">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/matches" element={<Matches />} />
+          </Routes>
+          <div className="absolute bottom-0 w-full">
+            <Footer />
+          </div>
+        </main>
       </BrowserRouter>
     </AppProvider>
   </>,
