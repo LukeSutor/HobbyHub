@@ -1,4 +1,4 @@
-export const hobby_list = [
+hobby_list = [
   "Reading",
   "Writing",
   "Drawing",
