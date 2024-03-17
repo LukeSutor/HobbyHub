@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAppContext } from "../AppContext";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function Login_Unsuccess() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
@@ -14,7 +14,7 @@ export default function Login() {
       email: email,
       password: password,
     });
-    // redirect to home page if login successful, otherwise go to the login_unsuccessful page
+    // Redirect to home page if successful login, otherwise refresh this page
     setUser(data.user);
     if (error) {
       window.location.href = "/login_unsuccessful"
@@ -27,6 +27,7 @@ export default function Login() {
   return (
     <div className="w-1/3 mx-auto mt-16 p-12 bg-gray-50 border border-gray-200 rounded-xl shadow">
       <h1 className="text-3xl font-semibold text-center mb-8">Welcome Back</h1>
+      <p className="text-base text-red-500">Invalid credentials. Please try again.</p>
       <form className="flex flex-col space-y-6">
         <label>
           <input
