@@ -1,9 +1,8 @@
 import React from "react";
-import "./footer.css";
 
 export default function Footer() {
   return (
-    <div className="footer-container">
+    <div className="py-4 flex items-center justify-center border-t-[1px] mt-16">
       <p>Hobby Hub</p>
     </div>
   );

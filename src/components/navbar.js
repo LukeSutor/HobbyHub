@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../AppContext";
-import "./navbar.css";
 
 export default function Footer() {
   const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
@@ -12,33 +11,30 @@ export default function Footer() {
   };
 
   return (
-    <div className="navbar-container">
-      <nav className="navbar">
-        <div className="container-fluid justify-content-end">
-          <Link to="/" className="nav-link links">
-            Home
-          </Link>
-          <Link to="/login" className="nav-link links">
-            Login
-          </Link>
-          <Link to="/signup" className="nav-link links">
-            Signup
-          </Link>
-          <Link to="/profile" className="nav-link links">
-            Profile
-          </Link>
-          {user && (
-            <div>
-              <li></li>
-              <li>
-                <button onClick={handleLogout} className="nav-link links">
-                  Logout
-                </button>
-              </li>
-            </div>
-          )}
-        </div>
-      </nav>
-    </div>
+    <nav className="flex flex-row justify-between py-4 px-12 shadow">
+      <h1 className="text-2xl">Hobby Hub</h1>
+      <div className="flex flex-row items-center space-x-8">
+        <Link to="/">Home</Link>
+        {(user === null || user === undefined) && (
+          <Link to="/login">Login</Link>
+        )}
+        {(user === null || user === undefined) && (
+          <Link to="/signup">Signup</Link>
+        )}
+        {user && (
+          <div className="flex flex-row space-x-8">
+            <Link to="/profile" className="">
+              Profile
+            </Link>
+            <Link to="/matches" className="">
+              Matches
+            </Link>
+            <button onClick={handleLogout} className="">
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    </nav>
   );
 }

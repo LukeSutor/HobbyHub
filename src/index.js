@@ -5,16 +5,17 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
-import "bootstrap/dist/css/bootstrap.css";
 
 // Import context
 import { AppProvider } from "./AppContext";
 
 // Import pages
-import Landing from "./pages/landing/landing";
-import Login from "./pages/login/login";
-import Signup from "./pages/signup/signup";
-import Profile from "./pages/profile/profile";
+import Landing from "./pages/landing";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import Profile from "./pages/profile";
+import Matches from "./pages/matches";
+import Login_Unsuccess from "./pages/login_unsuccessful";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -25,8 +26,10 @@ root.render(
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login_unsuccessful" element={<Login_Unsuccess />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/matches" element={<Matches />} />
         </Routes>
         <Footer />
       </BrowserRouter>

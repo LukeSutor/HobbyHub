@@ -15,7 +15,7 @@ export async function getUser(supabase, user, setUser) {
       return null;
     }
 
-    setUser(data.user);
+    await setUser(data.user);
     return data.user;
   } catch (error) {
     console.log(error.message);
@@ -62,96 +62,71 @@ export async function getProfileInfo(
   return false;
 }
 
-export async function getMatches(supabase, user, hobbies) {
-  if (hobbies.length === 0 || !user) {
+export async function getMatchedUsers(supabase, user, setMatches) {
+  if (!user) {
     return [];
   }
 
-  let hobby_list = hobbies.map((hobby) => hobby.name);
-  let matching_hobbies = [];
+  // Fetch all full matches where user1_id or user2_id is equal to the current user
+  const { data, error } = await supabase
+    .from("full-matches")
+    .select("*, user1: user1_id(*), user2: user2_id(*)")
+    .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`);
 
-  try {
-    const { data, error } = await supabase
-      .from("hobbies")
-      .select("user_id")
-      .in("name", hobby_list)
-      .neq("user_id", user.id);
+  if (error) {
+    console.log(error);
+    return [];
+  }
 
-    if (error) {
-      console.log(error);
-      return [];
+  // Remove user from matches
+  const matches = data.filter((match) => {
+    if (match.user1_id.id === user.id) {
+      return match.user2;
     }
+    return match.user1;
+  });
 
-    matching_hobbies = data.map((match) => match.user_id);
-  } catch (error) {
-    console.log(error.message);
-    return [];
-  }
-
-  if (matching_hobbies.length === 0) {
-    return [];
-  }
-
-  // Get user info for each match
-  let matches = [];
-  let match_uids = [];
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select()
-      .in("id", matching_hobbies);
-
-    if (error) {
-      console.log(error);
-      return [];
-    }
-
-    matches = data;
-    match_uids = data.map((match) => match.id);
-  } catch (error) {
-    console.log(error.message);
-    return [];
-  }
-
-  if (match_uids.length === 0) {
-    return [];
-  }
-
-  // Get the hobbies for all matches
-  let match_hobbies = [];
-  try {
-    const { data, error } = await supabase
-      .from("hobbies")
-      .select()
-      .in("user_id", match_uids);
-
-    if (error) {
-      console.log(error);
-      return [];
-    }
-
-    match_hobbies = data;
-  } catch (error) {
-    console.log(error.message);
-    return [];
-  }
-
-  // Add each hobby's name and skill to each match
+  // Loop through matches and remove user object that is the current user
   for (let i = 0; i < matches.length; i++) {
-    let match = matches[i];
-    let match_id = match.id;
-    let filtered_matches = match_hobbies.filter(
-      (hobby) => hobby.user_id === match_id,
-    );
-    let trimmed_hobbies = [];
-
-    for (let j = 0; j < filtered_matches.length; j++) {
-      let hobby = filtered_matches[j];
-      trimmed_hobbies[j] = { name: hobby.name, skill: hobby.skill };
+    if (matches[i].user1.id === user.id) {
+      matches[i].user = matches[i].user2;
+      delete matches[i].user1;
+      delete matches[i].user2;
+    } else {
+      matches[i].user = matches[i].user1;
+      delete matches[i].user1;
+      delete matches[i].user2;
     }
-
-    matches[i].hobbies = trimmed_hobbies;
   }
 
-  return matches;
+  setMatches(matches);
+}
+
+export async function unmatchUser(supabase, user, match_id) {
+  if (!user) {
+    return;
+  }
+
+  // Delete match from full-matches
+  const { data, error } = await supabase
+    .from("full-matches")
+    .delete()
+    .or(`user1_id.eq.${user.id},user2_id.eq.${match_id}`)
+    .or(`user1_id.eq.${match_id},user2_id.eq.${user.id}`);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  // Delete match from partial-matches
+  const { data: partial_data, error: partial_error } = await supabase
+    .from("partial-matches")
+    .delete()
+    .eq("sender_id", user.id);
+
+  if (partial_error) {
+    console.log(partial_error);
+    return;
+  }
 }
