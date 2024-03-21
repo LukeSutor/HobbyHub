@@ -4,10 +4,15 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+<<<<<<< HEAD
 In the project directory, you can run:
+=======
+- To see if your code passes linting tests, run `npm run lint`. To prettify your code before pushing, run `npm run prettier`.
+>>>>>>> df2ca90 (add login, signup, logout functionality and respective pages)
 
 ### `npm start`
 
+<<<<<<< HEAD
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
@@ -68,3 +73,11 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+- To push changes to the dev branch, run `git add .`, then `git commit -m <meaningful commit message>`, then `git push origin dev`.
+
+  - Use meaningful commit messages so that others understand what changes were made in each commit.
+
+- Only changes made to the `main` branch will create changes to the hosted website, so pull requests are needed to periodically merge dev to main.
+  - The website is available [here](https://celadon-pasca-504049.netlify.app/)
+>>>>>>> df2ca90 (add login, signup, logout functionality and respective pages)
