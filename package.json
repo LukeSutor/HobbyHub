@@ -2,7 +2,7 @@
   "name": "hobby-hub",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://lukesutor.github.io/hobbyhub",
+  "homepage": "https://main--celadon-pasca-504049.netlify.app/",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
     "@testing-library/jest-dom": "^5.17.0",
