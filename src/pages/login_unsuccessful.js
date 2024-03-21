@@ -17,17 +17,18 @@ export default function Login_Unsuccess() {
     // Redirect to home page if successful login, otherwise refresh this page
     setUser(data.user);
     if (error) {
-      window.location.href = "/login_unsuccessful"
-    }
-    else {
-    window.location.href = "/";
+      window.location.href = "/login_unsuccessful";
+    } else {
+      window.location.href = "/";
     }
   }
 
   return (
     <div className="w-1/3 mx-auto mt-16 p-12 bg-gray-50 border border-gray-200 rounded-xl shadow">
       <h1 className="text-3xl font-semibold text-center mb-8">Welcome Back</h1>
-      <p className="text-base text-red-500">Invalid credentials. Please try again.</p>
+      <p className="text-base text-red-500">
+        Invalid credentials. Please try again.
+      </p>
       <form className="flex flex-col space-y-6">
         <label>
           <input

@@ -17,10 +17,9 @@ export default function Login() {
     // redirect to home page if login successful, otherwise go to the login_unsuccessful page
     setUser(data.user);
     if (error) {
-      window.location.href = "/login_unsuccessful"
-    }
-    else {
-    window.location.href = "/";
+      window.location.href = "/login_unsuccessful";
+    } else {
+      window.location.href = "/";
     }
   }
 

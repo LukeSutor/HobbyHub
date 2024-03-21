@@ -18,7 +18,15 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{ user, setUser, hobbies, setHobbies, matches, setMatches, supabase}}
+      value={{
+        user,
+        setUser,
+        hobbies,
+        setHobbies,
+        matches,
+        setMatches,
+        supabase,
+      }}
     >
       {children}
     </AppContext.Provider>
