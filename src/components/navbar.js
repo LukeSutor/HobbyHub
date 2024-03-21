@@ -24,12 +24,21 @@ export default function Footer() {
             <Link to="/signup">Signup</Link>
           </li>
           {user && (
-            <div>
-              <li>
-                <Link to="/profile">Profile</Link>
+            <div className="row align-items-start justify-items-end">
+              <li className="col">
+                <Link to="/profile" className="nav-link links">
+                  Profile
+                </Link>
               </li>
               <li>
-                <button onClick={handleLogout}>Logout</button>
+                <Link to="/matches" className="nav-link links">
+                  Matches
+                </Link>
+              </li>
+              <li>
+                <button onClick={handleLogout} className="nav-link links">
+                  Logout
+                </button>
               </li>
             </div>
           )}
