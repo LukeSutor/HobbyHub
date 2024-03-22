@@ -87,8 +87,26 @@ export default function Landing() {
   // Landing page for unauthenticated users
   function unauthLanding() {
     return (
-      <div>
-        <h1>Unauthenticated landing page</h1>
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-semibold text-center mb-8">
+          Welcome to Hobby Hub
+        </h1>
+        <p className="text-lg text-center mb-6">
+          Hobby Hub is where connections are made through shared passions. Say
+          goodbye to aimless swiping and hello to meaningful interactions with
+          like-minded individuals.
+        </p>
+        <p className="text-lg text-center mb-6">
+          With Hobby Hub, finding friends, activity partners, or even romance is
+          as easy as swiping right on hobbies you love. Discover new interests,
+          expand your social circle, and embark on exciting adventures—all with
+          a simple swipe.
+        </p>
+        <p className="text-lg text-center mb-6">
+          Join our community today and start connecting with people who share
+          your enthusiasm for life. Hobby Hub: where connections flourish
+          through the joy of shared hobbies.
+        </p>
       </div>
     );
   }
