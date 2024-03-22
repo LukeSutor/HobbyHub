@@ -14,10 +14,13 @@ export default function Login() {
       email: email,
       password: password,
     });
-
+    // redirect to home page if login successful, otherwise go to the login_unsuccessful page
     setUser(data.user);
-    // Redirect to home page
-    window.location.href = "/";
+    if (error) {
+      window.location.href = "/login_unsuccessful";
+    } else {
+      window.location.href = "/";
+    }
   }
 
   return (

@@ -10,6 +10,7 @@ const AppContext = createContext();
 export function AppProvider({ children }) {
   const [user, setUser] = useState(null); // User information
   const [hobbies, setHobbies] = useState([]); // User hobbies
+  const [matches, setMatches] = useState([]); // User matches
   const supabase = createClient(
     process.env.REACT_APP_SUPABASE_URL,
     process.env.REACT_APP_SUPABASE_ANON_KEY,
@@ -17,7 +18,15 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider
-      value={{ user, setUser, hobbies, setHobbies, supabase }}
+      value={{
+        user,
+        setUser,
+        hobbies,
+        setHobbies,
+        matches,
+        setMatches,
+        supabase,
+      }}
     >
       {children}
     </AppContext.Provider>
