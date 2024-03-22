@@ -502,6 +502,7 @@ export const hobby_list = [
   "Canadian Football",
   "Flag Football",
   "Touch Football",
+  "Soccer",
   "Beach Soccer",
   "Futsal",
   "Freestyle Football",

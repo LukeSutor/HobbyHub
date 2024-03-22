@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
-import { getProfileInfo, getMatchedUsers, unmatchUser } from "../functions";
+import { getProfileInfo, getMatchedUsers, deleteMatch } from "../functions";
 
 export default function Matches() {
   const [loading, setLoading] = useState(true);
@@ -10,15 +10,10 @@ export default function Matches() {
   useEffect(() => {
     setLoading(true);
     // Attempt to get user
-    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() =>
-      setLoading(false),
-    );
+    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() => {
+      fetchMatches().then(() => setLoading(false));
+    });
   }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchMatches().then(() => setLoading(false));
-  }, [user]);
 
   async function fetchMatches() {
     if (!user) {
@@ -26,15 +21,6 @@ export default function Matches() {
     }
 
     await getMatchedUsers(supabase, user, setMatches);
-  }
-
-  async function deleteMatch(match_id) {
-    if (!user) {
-      return;
-    }
-
-    await unmatchUser(supabase, user, match_id);
-    setMatches(matches.filter((match) => match.id !== match_id));
   }
 
   return (
@@ -50,7 +36,7 @@ export default function Matches() {
             >
               <p>{match.user.email}</p>
               <button
-                onClick={() => deleteMatch(match.id)}
+                onClick={() => console.log("DELETING")}
                 className="bg-red-200 border border-red-400 font-semibold px-3 py-2 rounded-lg shadow"
               >
                 Unmatch
