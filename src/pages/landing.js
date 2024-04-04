@@ -4,21 +4,14 @@ import { getUser, getHobbies, getProfileInfo, getMatches } from "../functions";
 
 export default function Landing() {
   const fetchNumber = 10; // Number of matches to fetch with each request
-  const [loading, setLoading] = useState(true);
   const [loadingMatches, setLoadingMatches] = useState(false); // Loading state for fetching matches
   const [matches, setMatches] = useState([]);
   const [offset, setOffset] = useState(0); // Stores offset of new matches to fetch
-  const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
+  const { user, hobbies, loading, supabase } = useAppContext();
 
   useEffect(() => {
-    setLoading(true);
-    // Attempt to get user and redirect if failed
-    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() => {
-      setLoading(false);
-    });
-  }, []);
+    document.title = "Hobby Hub";
 
-  useEffect(() => {
     setLoadingMatches(true);
     getMatches().then(() => setLoadingMatches(false));
   }, [user, hobbies]);

@@ -51,11 +51,14 @@ export async function getProfileInfo(
   setUser,
   hobbies,
   setHobbies,
+  matches,
+  setMatches,
 ) {
   let usr = await getUser(supabase, user, setUser);
 
   if (usr) {
     await getHobbies(supabase, usr, hobbies, setHobbies);
+    await getMatchedUsers(supabase, usr, setMatches);
     return true;
   }
 
@@ -129,4 +132,22 @@ export async function unmatchUser(supabase, user, match_id) {
     console.log(partial_error);
     return;
   }
+}
+
+export async function getMessages(supabase, user, setMessages) {
+  if (!user) {
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("chats")
+    .select()
+    .or(`sender.eq.${user.id},receiver.eq.${user.id}`);
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  setMessages(data);
 }
