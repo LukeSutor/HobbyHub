@@ -19,7 +19,7 @@ export default function Chat() {
 
   useEffect(() => {
     newMessageRef.current?.scrollIntoView();
-  }, [match]);
+  }, [match, loading]);
 
   async function sendMessage(event) {
     event.preventDefault();
@@ -92,7 +92,7 @@ export default function Chat() {
           }}
         >
           {match?.user?.email === undefined ? (
-            <div className="flex flex-col gap-y-6 justify-center items-center w-full p-8">
+            <div className="flex flex-col gap-y-6 justify-center items-center w-full h-full p-8">
               <h1 className="text-2xl font-semibold text-center bg-gray-50 border border-gray-200 rounded-lg shadow p-8">
                 Select a match from the left to start chatting
               </h1>
@@ -171,7 +171,7 @@ export default function Chat() {
                   value={newMessage}
                   placeholder={`Send a message to ${match?.user?.email}`}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  className="w-3/4 bg-gray-50"
+                  className="w-3/4 bg-gray-50 focus:outline-none"
                 />
                 <button
                   type="submit"

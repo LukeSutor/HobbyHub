@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
 import { hobby_list } from "../components/hobbies_list";
+import { numToSkill } from "../functions";
 
 export default function Profile() {
   const [newHobbyName, setNewHobbyName] = useState("");
@@ -121,7 +122,7 @@ export default function Profile() {
                   className="px-8 py-3 border border-gray-300 rounded-lg whitespace-nowrap"
                 >
                   <p className="text-lg mb-1">{hobby.name}</p>
-                  <p className="mb-2">Skill: {hobby.skill}</p>
+                  <p className="mb-2">Skill: {numToSkill(hobby.skill)}</p>
                   <button
                     onClick={() => handleDeleteHobby(hobby.name)}
                     className="w-full py-2 bg-red-100 border border-red-200 rounded-lg shadow"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
-import { getMatches, getMatchedUsers } from "../functions";
+import { getMatches, getMatchedUsers, numToSkill } from "../functions";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
@@ -194,7 +194,7 @@ export default function Landing() {
                             <p className="text-lg font-semibold">
                               {hobby.name}
                             </p>
-                            <p>Skill level: {hobby.skill}</p>
+                            <p>Skill level: {numToSkill(hobby.skill)}</p>
                           </div>
                         );
                       })}
