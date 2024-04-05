@@ -151,3 +151,20 @@ export async function getChats(supabase, user, setChats) {
 
   setChats(data);
 }
+
+export function numToSkill(num) {
+  switch (num) {
+    case 1:
+      return "Beginner";
+    case 2:
+      return "Novice";
+    case 3:
+      return "Intermediate";
+    case 4:
+      return "Advanced";
+    case 5:
+      return "Expert";
+    default:
+      return "Error";
+  }
+}
