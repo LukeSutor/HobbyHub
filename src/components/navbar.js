@@ -29,6 +29,9 @@ export default function Footer() {
             <Link to="/matches" className="">
               Matches
             </Link>
+            <Link to="/chat" className="">
+              Chat
+            </Link>
             <button onClick={handleLogout} className="">
               Logout
             </button>

@@ -16,6 +16,7 @@ import Signup from "./pages/signup";
 import Profile from "./pages/profile";
 import Matches from "./pages/matches";
 import Login_Unsuccess from "./pages/login_unsuccessful";
+import Chat from "./pages/chat";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -30,6 +31,10 @@ root.render(
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/matches" element={<Matches />} />
+          {/* Default chat page */}
+          <Route path="/chat" element={<Chat />} />
+          {/* Chat page with specified user */}
+          <Route path="/chat/:id" element={<Chat />} />
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -51,11 +51,15 @@ export async function getProfileInfo(
   setUser,
   hobbies,
   setHobbies,
+  setMatches,
+  setChats,
 ) {
   let usr = await getUser(supabase, user, setUser);
 
   if (usr) {
     await getHobbies(supabase, usr, hobbies, setHobbies);
+    await getMatchedUsers(supabase, usr, setMatches);
+    await getChats(supabase, usr, setChats);
     return true;
   }
 
@@ -107,26 +111,43 @@ export async function unmatchUser(supabase, user, match_id) {
     return;
   }
 
-  // Delete match from full-matches
-  const { data, error } = await supabase
+  // Attempt delete first way
+  const { data_one, error_one } = await supabase
     .from("full-matches")
     .delete()
-    .or(`user1_id.eq.${user.id},user2_id.eq.${match_id}`)
-    .or(`user1_id.eq.${match_id},user2_id.eq.${user.id}`);
+    .eq("user1_id", user.id)
+    .eq("user2_id", match_id);
+
+  if (error_one) {
+    console.log(error_one);
+  }
+
+  // Attempt delete second way
+  const { data_two, error_two } = await supabase
+    .from("full-matches")
+    .delete()
+    .eq("user1_id", match_id)
+    .eq("user2_id", user.id);
+
+  if (error_two) {
+    console.log(error_two);
+  }
+}
+
+export async function getChats(supabase, user, setChats) {
+  if (!user) {
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("chats")
+    .select()
+    .or(`sender.eq.${user.id},receiver.eq.${user.id}`);
 
   if (error) {
     console.log(error);
     return;
   }
 
-  // Delete match from partial-matches
-  const { data: partial_data, error: partial_error } = await supabase
-    .from("partial-matches")
-    .delete()
-    .eq("sender_id", user.id);
-
-  if (partial_error) {
-    console.log(partial_error);
-    return;
-  }
+  setChats(data);
 }

@@ -15,6 +15,11 @@ export default function Signup() {
       password: password,
     });
 
+    if (error) {
+      console.log(error);
+      return;
+    }
+
     setUser(data.user);
 
     // Redirect to home page

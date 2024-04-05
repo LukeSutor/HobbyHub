@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
-import { getUser, getHobbies, getProfileInfo, getMatches } from "../functions";
+import { getMatches, getMatchedUsers } from "../functions";
+import { Link } from "react-router-dom";
 
 export default function Landing() {
-  const fetchNumber = 10; // Number of matches to fetch with each request
-  const [loading, setLoading] = useState(true);
-  const [loadingMatches, setLoadingMatches] = useState(false); // Loading state for fetching matches
-  const [matches, setMatches] = useState([]);
-  const [offset, setOffset] = useState(0); // Stores offset of new matches to fetch
-  const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
+  const fetchNumber = 10; // Number of prospects to fetch with each request
+  const [loadingProspects, setLoadingProspects] = useState(false); // Loading state for fetching prospects
+  const [prospects, setProspects] = useState([]);
+  const [offset, setOffset] = useState(0); // Stores offset of new prospects to fetch
+  const [banner, setBanner] = useState({
+    visible: false,
+    message: "hello world",
+  });
+  const { user, hobbies, setMatches, loading, supabase } = useAppContext();
 
   useEffect(() => {
-    setLoading(true);
-    // Attempt to get user and redirect if failed
-    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then(() => {
-      setLoading(false);
-    });
-  }, []);
+    document.title = "Hobby Hub";
 
-  useEffect(() => {
-    setLoadingMatches(true);
-    getMatches().then(() => setLoadingMatches(false));
+    setLoadingProspects(true);
+    getMatches().then(() => setLoadingProspects(false));
   }, [user, hobbies]);
+
+  useEffect(() => {
+    if (banner.visible) {
+      const timer = setTimeout(() => {
+        setBanner((prevBanner) => ({ ...prevBanner, visible: false }));
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [banner.visible]);
 
   async function getMatches() {
     if (hobbies.length === 0 || !user) {
@@ -42,7 +49,7 @@ export default function Landing() {
       return;
     }
 
-    setMatches([...matches, ...data]);
+    setProspects([...prospects, ...data]);
     setOffset(offset + fetchNumber);
   }
 
@@ -61,11 +68,26 @@ export default function Landing() {
     }
 
     if (data.operation == "full_match_created") {
-      console.log("Full match created");
+      getMatchedUsers(supabase, user, setMatches).then(() => {
+        setBanner({ visible: true, message: "It's a match!" });
+      });
     } else if (data.operation == "partial_match_created") {
-      console.log("Partial match created");
+      setBanner({
+        visible: true,
+        message:
+          " Match initialized. If you are matched back, you will be able to chat!",
+      });
+    } else if (data.operation == "partial_match_exists") {
+      setBanner({
+        visible: true,
+        message:
+          "We're sorry, you have already requested to match with this user.",
+      });
     } else {
-      console.log("Match already exists");
+      setBanner({
+        visible: true,
+        message: "We're sorry, that match already exists.",
+      });
     }
   }
 
@@ -115,20 +137,44 @@ export default function Landing() {
   function authLanding() {
     return (
       <div>
-        {/* Display matches */}
-        {matches.length === 0 && !loadingMatches ? (
+        {/* Dropdown banner */}
+        <div
+          className={`fixed overflow-hidden top-20 w-fit min-w-[30rem] bg-white border border-gray-200 shadow rounded-lg transform left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out ${banner.visible ? "translate-y-0" : "-translate-y-[200%]"}`}
+        >
+          <div className="py-4 px-6">
+            <p className="text-xl text-center font-semibold">
+              {banner.message}
+            </p>
+            <p className="text-gray-700 text-lg text-center">
+              View all of your matches{" "}
+              <Link to="/matches" className="text-blue-500 font-semibold">
+                here
+              </Link>
+              .
+            </p>
+          </div>
+          <div
+            className={`h-1 bg-green-400 transition-all duration-[5s] ease-linear ${banner.visible ? "w-0" : "w-full"}`}
+            // style={{
+            //   transition: "width 4s linear",
+            //   width: banner.visible ? "0%" : "100%",
+            // }}
+          />
+        </div>
+        {/* Display prospects */}
+        {prospects.length === 0 && !loadingProspects ? (
           <div>
             <h1 className="text-3xl font-semibold text-center my-12">
-              No matches
+              No prospects
             </h1>
           </div>
         ) : (
           <div>
             <h1 className="text-3xl font-semibold text-center my-12">
-              Matches
+              Prospects
             </h1>
             <div className="flex flex-col gap-y-6 justify-center items-center">
-              {matches.map((match) => {
+              {prospects.map((match) => {
                 return (
                   <div
                     key={match.id}
@@ -166,18 +212,18 @@ export default function Landing() {
           </div>
         )}
         <div className="w-full flex justify-center items-center my-10">
-          {!loadingMatches &&
-          matches.length % fetchNumber !== 0 &&
-          matches.length !== 0 ? (
+          {!loadingProspects &&
+          prospects.length % fetchNumber !== 0 &&
+          prospects.length !== 0 ? (
             <div>
-              <p className="text-xl font-semibold">No more Matches</p>
+              <p className="text-xl font-semibold">No more prospects</p>
             </div>
           ) : (
             <button
               onClick={getMatches}
               className="px-6 py-3 text-xl font-semibold bg-yellow-100 border border-yellow-300 shadow rounded-lg"
             >
-              {matches.length === 0 ? "Get Matches" : "More Matches"}
+              {prospects.length === 0 ? "Get prospects" : "More prospects"}
             </button>
           )}
         </div>

@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
-import { getProfileInfo } from "../functions";
 import { hobby_list } from "../components/hobbies_list";
 
 export default function Profile() {
-  const [loading, setLoading] = useState(true);
   const [newHobbyName, setNewHobbyName] = useState("");
   const [newHobbySkillLevel, setNewHobbySkillLevel] = useState(0);
   const [filteredHobbies, setFilteredHobbies] = useState([]);
-  const { user, setUser, hobbies, setHobbies, supabase } = useAppContext();
+  const { user, hobbies, setHobbies, loading, supabase } = useAppContext();
 
   useEffect(() => {
-    setLoading(true);
-    // Attempt to get user and redirect if failed
-    getProfileInfo(supabase, user, setUser, hobbies, setHobbies).then((res) => {
-      if (!res) {
-        window.location.href = "/login";
-      }
-      setLoading(false);
-    });
-  }, []);
+    document.title = "Profile | Hobby Hub";
+    // Redirect user if not logged in
+    if (!loading && !user) {
+      window.location.href = "/login";
+    }
+  }, [loading]);
 
   async function handeAddHobby(event) {
     event.preventDefault();
@@ -93,6 +88,14 @@ export default function Profile() {
     setFilteredHobbies([]);
   }
 
+  const skillLevels = {
+    1: "Beginner",
+    2: "Novice",
+    3: "Intermediate",
+    4: "Advanced",
+    5: "Expert",
+  };
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <h1 className="text-3xl font-semibold text-center my-12">Profile</h1>
@@ -160,14 +163,18 @@ export default function Profile() {
                 </label>
                 <label className="flex flex-col w-1/3">
                   <p className="ml-1 text-sm">Skill Level</p>
-                  <input
-                    type="number"
+                  <select
                     name="skillLevel"
-                    placeholder="Integer from 1 to 5"
                     value={newHobbySkillLevel}
                     className="w-full text-sm border border-gray-200 p-3 rounded-lg"
                     onChange={(e) => setNewHobbySkillLevel(e.target.value)}
-                  />
+                  >
+                    {Object.entries(skillLevels).map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <button
                   type="submit"
