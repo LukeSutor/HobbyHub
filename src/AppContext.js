@@ -29,8 +29,8 @@ export function AppProvider({ children }) {
       setUser,
       hobbies,
       setHobbies,
-      matches,
       setMatches,
+      setChats
     ).then(() => {
       setLoading(false);
     });
