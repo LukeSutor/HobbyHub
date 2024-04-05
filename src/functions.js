@@ -111,27 +111,27 @@ export async function unmatchUser(supabase, user, match_id) {
     return;
   }
 
-  // Delete match from full-matches
-  const { data, error } = await supabase
+
+  // Attempt delete first way
+  const { data_one, error_one } = await supabase
     .from("full-matches")
     .delete()
-    .or(`user1_id.eq.${user.id},user2_id.eq.${match_id}`)
-    .or(`user1_id.eq.${match_id},user2_id.eq.${user.id}`);
+    .eq("user1_id", user.id)
+    .eq("user2_id", match_id);
 
-  if (error) {
-    console.log(error);
-    return;
+  if(error_one) {
+    console.log(error_one);
   }
 
-  // Delete match from partial-matches
-  const { data: partial_data, error: partial_error } = await supabase
-    .from("partial-matches")
+  // Attempt delete second way
+  const { data_two, error_two } = await supabase
+    .from("full-matches")
     .delete()
-    .eq("sender_id", user.id);
+    .eq("user1_id", match_id)
+    .eq("user2_id", user.id);
 
-  if (partial_error) {
-    console.log(partial_error);
-    return;
+  if(error_two) {
+    console.log(error_two);
   }
 }
 

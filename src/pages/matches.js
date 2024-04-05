@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { unmatchUser } from "../functions";
 
 export default function Matches() {
-  const { user, hobbies, matches, setMatches, loading, supabase } =
+  const { user, matches, setMatches, loading, supabase } =
     useAppContext();
 
   useEffect(() => {
@@ -20,8 +20,9 @@ export default function Matches() {
       return;
     }
 
-    await unmatchUser(supabase, user, match_id);
-    setMatches(matches.filter((match) => match.id !== match_id));
+    await unmatchUser(supabase, user, match_id).then(() => {
+      setMatches(matches.filter((match) => match.user.id !== match_id));
+    });
   }
 
   return (
@@ -50,7 +51,7 @@ export default function Matches() {
                     Chat
                   </Link>
                   <button
-                    onClick={() => deleteMatch(match.id)}
+                    onClick={() => deleteMatch(match.user.id)}
                     className="bg-red-200 border border-red-400 font-semibold px-3 py-2 rounded-lg shadow"
                   >
                     Unmatch

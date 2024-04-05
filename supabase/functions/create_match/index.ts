@@ -44,7 +44,8 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase
       .from("partial-matches")
       .select("*")
-      .eq("receiver_id", user_id);
+      .eq("receiver_id", user_id)
+      .eq("sender_id", match_id);
 
     if (error) {
       throw error;
@@ -68,7 +69,8 @@ Deno.serve(async (req) => {
         .insert([{ sender_id: user_id, receiver_id: match_id }]);
 
       if (error) {
-        throw error;
+        // This user has already created a partial match with this user
+        return_data = { operation: "partial_match_exists" };
       } else {
         return_data = { operation: "partial_match_created" };
       }

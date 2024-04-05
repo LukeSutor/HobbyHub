@@ -65,13 +65,13 @@ export default function Chat() {
             ))}
         </div>
         {match?.user?.email === undefined ? (
-          <div className="flex flex-col gap-y-6 justify-center items-center w-[64rem] p-8">
+          <div className="flex flex-col gap-y-6 justify-center items-center w-[80rem] p-8">
             <h1 className="text-2xl font-semibold text-center bg-gray-50 border border-gray-200 rounded-lg shadow p-8">
               Select a match from the left to start chatting
             </h1>
           </div>
         ) : (
-          <div className="flex flex-col gap-y-6 justify-end items-center w-[64rem] p-8">
+          <div className="flex flex-col gap-y-6 justify-end items-center w-[80rem] p-8">
             {chats &&
               chats
                 .filter(
@@ -80,7 +80,7 @@ export default function Chat() {
                 .map((message, index) => (
                   <div
                     key={index}
-                    className={`flex flex-row justify-between items-center w-fit max-w-[90%] px-6 py-4  border border-gray-200 rounded-xl shadow ${
+                    className={`flex flex-row justify-between items-center w-fit max-w-[60%] px-6 py-4  border border-gray-200 rounded-xl shadow ${
                       message.sender === user.id
                         ? "bg-blue-500 text-white ml-auto"
                         : "bg-gray-50 mr-auto"

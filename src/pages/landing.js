@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
 import { getMatches, getMatchedUsers } from "../functions";
+import { Link } from "react-router-dom";
 
 export default function Landing() {
   const fetchNumber = 10; // Number of prospects to fetch with each request
   const [loadingProspects, setLoadingProspects] = useState(false); // Loading state for fetching prospects
   const [prospects, setProspects] = useState([]);
   const [offset, setOffset] = useState(0); // Stores offset of new prospects to fetch
+  const [banner, setBanner] = useState({ visible: false, message: "hello world" });
   const { user, hobbies, setMatches, loading, supabase } = useAppContext();
 
   useEffect(() => {
@@ -15,6 +17,15 @@ export default function Landing() {
     setLoadingProspects(true);
     getMatches().then(() => setLoadingProspects(false));
   }, [user, hobbies]);
+
+  useEffect(() => {
+    if (banner.visible) {
+      const timer = setTimeout(() => {
+        setBanner((prevBanner) => ({ ...prevBanner, visible: false }));
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+}, [banner.visible]);
 
   async function getMatches() {
     if (hobbies.length === 0 || !user) {
@@ -54,15 +65,15 @@ export default function Landing() {
     }
 
     if (data.operation == "full_match_created") {
-      console.log("Full match created");
-      // Re-fetch matches and redirect to matches page
       getMatchedUsers(supabase, user, setMatches).then(() => {
-        window.location.href = "/matches";
+        setBanner({ visible: true, message: "It's a match!" });
       });
     } else if (data.operation == "partial_match_created") {
-      console.log("Partial match created");
+      setBanner({ visible: true, message: " Match initialized. If you are matched back, you will be able to chat!" });
+    } else if (data.operation == "partial_match_exists") {
+      setBanner({ visible: true, message: "We're sorry, you have already requested to match with this user." });
     } else {
-      console.log("Match already exists");
+      setBanner({ visible: true, message: "We're sorry, that match already exists." });
     }
   }
 
@@ -112,6 +123,22 @@ export default function Landing() {
   function authLanding() {
     return (
       <div>
+        {/* Dropdown banner */}
+        <div
+          className={`fixed overflow-hidden top-20 w-fit min-w-[30rem] bg-white border border-gray-200 shadow rounded-lg transform left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out ${banner.visible ? "translate-y-0" : "-translate-y-[200%]"}`}
+        >
+          <div className="py-4 px-6">
+            <p className="text-xl text-center font-semibold">{banner.message}</p>
+            <p className="text-gray-700 text-lg text-center">View all of your matches <Link to='/matches' className="text-blue-500 font-semibold">here</Link>.</p>
+          </div>
+          <div
+            className={`h-1 bg-green-400 transition-all duration-[5s] ease-linear ${banner.visible ? "w-0" : "w-full"}`}
+            // style={{
+            //   transition: "width 4s linear",
+            //   width: banner.visible ? "0%" : "100%",
+            // }}
+          />
+        </div>
         {/* Display prospects */}
         {prospects.length === 0 && !loadingProspects ? (
           <div>
