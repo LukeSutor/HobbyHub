@@ -52,7 +52,7 @@ export async function getProfileInfo(
   hobbies,
   setHobbies,
   setMatches,
-  setChats
+  setChats,
 ) {
   let usr = await getUser(supabase, user, setUser);
 

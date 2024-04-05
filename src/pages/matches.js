@@ -7,13 +7,13 @@ export default function Matches() {
   const { user, hobbies, matches, setMatches, loading, supabase } =
     useAppContext();
 
-    useEffect(() => {
-      document.title = "Matches | Hobby Hub";
-      // Redirect user if not logged in
-      if (!loading && !user) {
-        window.location.href = "/login";
-      }
-    }, [loading]);
+  useEffect(() => {
+    document.title = "Matches | Hobby Hub";
+    // Redirect user if not logged in
+    if (!loading && !user) {
+      window.location.href = "/login";
+    }
+  }, [loading]);
 
   async function deleteMatch(match_id) {
     if (!user) {

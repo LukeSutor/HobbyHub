@@ -30,7 +30,7 @@ export function AppProvider({ children }) {
       hobbies,
       setHobbies,
       setMatches,
-      setChats
+      setChats,
     ).then(() => {
       setLoading(false);
     });

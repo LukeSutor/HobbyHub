@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../AppContext";
-import { getUser, getHobbies, getProfileInfo, getMatches } from "../functions";
+import { getMatches, getMatchedUsers } from "../functions";
 
 export default function Landing() {
-  const fetchNumber = 10; // Number of matches to fetch with each request
-  const [loadingMatches, setLoadingMatches] = useState(false); // Loading state for fetching matches
-  const [matches, setMatches] = useState([]);
-  const [offset, setOffset] = useState(0); // Stores offset of new matches to fetch
-  const { user, hobbies, loading, supabase } = useAppContext();
+  const fetchNumber = 10; // Number of prospects to fetch with each request
+  const [loadingProspects, setLoadingProspects] = useState(false); // Loading state for fetching prospects
+  const [prospects, setProspects] = useState([]);
+  const [offset, setOffset] = useState(0); // Stores offset of new prospects to fetch
+  const { user, hobbies, setMatches, loading, supabase } = useAppContext();
 
   useEffect(() => {
     document.title = "Hobby Hub";
 
-    setLoadingMatches(true);
-    getMatches().then(() => setLoadingMatches(false));
+    setLoadingProspects(true);
+    getMatches().then(() => setLoadingProspects(false));
   }, [user, hobbies]);
 
   async function getMatches() {
@@ -35,7 +35,7 @@ export default function Landing() {
       return;
     }
 
-    setMatches([...matches, ...data]);
+    setProspects([...prospects, ...data]);
     setOffset(offset + fetchNumber);
   }
 
@@ -55,6 +55,10 @@ export default function Landing() {
 
     if (data.operation == "full_match_created") {
       console.log("Full match created");
+      // Re-fetch matches and redirect to matches page
+      getMatchedUsers(supabase, user, setMatches).then(() => {
+        window.location.href = "/matches";
+      });
     } else if (data.operation == "partial_match_created") {
       console.log("Partial match created");
     } else {
@@ -108,20 +112,20 @@ export default function Landing() {
   function authLanding() {
     return (
       <div>
-        {/* Display matches */}
-        {matches.length === 0 && !loadingMatches ? (
+        {/* Display prospects */}
+        {prospects.length === 0 && !loadingProspects ? (
           <div>
             <h1 className="text-3xl font-semibold text-center my-12">
-              No matches
+              No prospects
             </h1>
           </div>
         ) : (
           <div>
             <h1 className="text-3xl font-semibold text-center my-12">
-              Matches
+              Prospects
             </h1>
             <div className="flex flex-col gap-y-6 justify-center items-center">
-              {matches.map((match) => {
+              {prospects.map((match) => {
                 return (
                   <div
                     key={match.id}
@@ -159,18 +163,18 @@ export default function Landing() {
           </div>
         )}
         <div className="w-full flex justify-center items-center my-10">
-          {!loadingMatches &&
-          matches.length % fetchNumber !== 0 &&
-          matches.length !== 0 ? (
+          {!loadingProspects &&
+          prospects.length % fetchNumber !== 0 &&
+          prospects.length !== 0 ? (
             <div>
-              <p className="text-xl font-semibold">No more Matches</p>
+              <p className="text-xl font-semibold">No more prospects</p>
             </div>
           ) : (
             <button
               onClick={getMatches}
               className="px-6 py-3 text-xl font-semibold bg-yellow-100 border border-yellow-300 shadow rounded-lg"
             >
-              {matches.length === 0 ? "Get Matches" : "More Matches"}
+              {prospects.length === 0 ? "Get prospects" : "More prospects"}
             </button>
           )}
         </div>

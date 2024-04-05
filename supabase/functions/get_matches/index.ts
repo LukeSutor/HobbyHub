@@ -1,66 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js";
 import { corsHeaders } from "../_shared/cors.ts";
 
-async function getMatchingHobbyUserIDs(
-  supabase,
-  user,
-  hobbies,
-  amount,
-  offset,
-) {
-  let hobby_list = hobbies.map((hobby) => hobby.name);
-
-  const { data, error } = await supabase
-    .from("hobbies")
-    .select("user_id", { distinct: true })
-    .in("name", hobby_list)
-    .neq("user_id", user.id)
-    .order("user_id", { ascending: true })
-    .range(offset, offset + amount - 1);
-
-  if (error) {
-    throw error;
-  }
-
-  let matching_user_ids = [...new Set(data.map((item) => item.user_id))];
-  return matching_user_ids;
-}
-
-async function getMatchingUserData(supabase, ids) {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .in("id", ids);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function getMatchingUserHobbies(supabase, ids) {
-  const { data, error } = await supabase
-    .from("hobbies")
-    .select("*")
-    .in("user_id", ids);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-function appendHobbiesToUsers(users, hobbies) {
-  let users_with_hobbies = users.map((user) => {
-    let user_hobbies = hobbies.filter((hobby) => hobby.user_id === user.id);
-    return { ...user, hobbies: user_hobbies };
-  });
-
-  return users_with_hobbies;
-}
-
 Deno.serve(async (req) => {
   // This is needed if you're planning to invoke your function from a browser.
   if (req.method === "OPTIONS") {
@@ -79,31 +19,31 @@ Deno.serve(async (req) => {
       },
     );
 
-    // Get all user ids that have matching hobbies get range [offset, offset + amount - 1] ids ordered by id ascending
-    const match_ids = await getMatchingHobbyUserIDs(
-      supabase,
-      user,
-      hobbies,
-      amount,
-      offset,
-    );
+    // Get matching user IDs based on hobbies in range [offset, offset + amount - 1] sorted by user_id ascending
+    let hobby_list = hobbies.map((hobby) => hobby.name);
 
-    // Get all user data from the matching user ids
-    const matching_user_data = await getMatchingUserData(supabase, match_ids);
+    const { data, error } = await supabase
+      .from("hobbies")
+      .select("user_id", { distinct: true })
+      .in("name", hobby_list)
+      .neq("user_id", user.id)
+      .order("user_id", { ascending: true })
+      .range(offset, offset + amount - 1);
 
-    // Get the hobbies of the matching users
-    const matching_user_hobbies = await getMatchingUserHobbies(
-      supabase,
-      match_ids,
-    );
+    if (error) {
+      throw error;
+    }
 
-    // Add hobbies to their respective users
-    const users_with_hobbies = appendHobbiesToUsers(
-      matching_user_data,
-      matching_user_hobbies,
-    );
+    let matching_user_ids = [...new Set(data.map((item) => item.user_id))];
 
-    return new Response(JSON.stringify(users_with_hobbies), {
+    // Get user data with associated hobbies for matching user IDs
+    const { data: user_matches_data, error: user_matches_error } =
+      await supabase
+        .from("users")
+        .select("*, hobbies(*)")
+        .in("id", matching_user_ids);
+
+    return new Response(JSON.stringify(user_matches_data), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });

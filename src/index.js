@@ -31,6 +31,9 @@ root.render(
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/matches" element={<Matches />} />
+          {/* Default chat page */}
+          <Route path="/chat" element={<Chat />} />
+          {/* Chat page with specified user */}
           <Route path="/chat/:id" element={<Chat />} />
         </Routes>
         <Footer />
