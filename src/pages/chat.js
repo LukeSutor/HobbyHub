@@ -58,9 +58,16 @@ export default function Chat() {
                 key={index}
                 className={`w-full max-w-80 overflow-hidden p-4 rounded-lg border ${match.user.id === id ? "bg-blue-600 border-blue-700" : "hover:bg-blue-500 border-blue-400"}`}
               >
-                <p className="text-white text-xl font-semibold whitespace-nowrap text-ellipsis overflow-hidden">{match.user.email}</p>
-                <p className="text-blue-100 whitespace-nowrap text-ellipsis overflow-hidden">{chats.findLast((chat) => chat.sender === match.user.id || chat.receiver === match.user.id)?.message || "Start chatting!"}</p>
-
+                <p className="text-white text-xl font-semibold whitespace-nowrap text-ellipsis overflow-hidden">
+                  {match.user.email}
+                </p>
+                <p className="text-blue-100 whitespace-nowrap text-ellipsis overflow-hidden">
+                  {chats.findLast(
+                    (chat) =>
+                      chat.sender === match.user.id ||
+                      chat.receiver === match.user.id,
+                  )?.message || "Start chatting!"}
+                </p>
               </Link>
             ))}
         </div>

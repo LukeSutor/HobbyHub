@@ -8,7 +8,10 @@ export default function Landing() {
   const [loadingProspects, setLoadingProspects] = useState(false); // Loading state for fetching prospects
   const [prospects, setProspects] = useState([]);
   const [offset, setOffset] = useState(0); // Stores offset of new prospects to fetch
-  const [banner, setBanner] = useState({ visible: false, message: "hello world" });
+  const [banner, setBanner] = useState({
+    visible: false,
+    message: "hello world",
+  });
   const { user, hobbies, setMatches, loading, supabase } = useAppContext();
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function Landing() {
       }, 4000);
       return () => clearTimeout(timer);
     }
-}, [banner.visible]);
+  }, [banner.visible]);
 
   async function getMatches() {
     if (hobbies.length === 0 || !user) {
@@ -69,11 +72,22 @@ export default function Landing() {
         setBanner({ visible: true, message: "It's a match!" });
       });
     } else if (data.operation == "partial_match_created") {
-      setBanner({ visible: true, message: " Match initialized. If you are matched back, you will be able to chat!" });
+      setBanner({
+        visible: true,
+        message:
+          " Match initialized. If you are matched back, you will be able to chat!",
+      });
     } else if (data.operation == "partial_match_exists") {
-      setBanner({ visible: true, message: "We're sorry, you have already requested to match with this user." });
+      setBanner({
+        visible: true,
+        message:
+          "We're sorry, you have already requested to match with this user.",
+      });
     } else {
-      setBanner({ visible: true, message: "We're sorry, that match already exists." });
+      setBanner({
+        visible: true,
+        message: "We're sorry, that match already exists.",
+      });
     }
   }
 
@@ -128,8 +142,16 @@ export default function Landing() {
           className={`fixed overflow-hidden top-20 w-fit min-w-[30rem] bg-white border border-gray-200 shadow rounded-lg transform left-1/2 -translate-x-1/2 transition-all duration-300 ease-in-out ${banner.visible ? "translate-y-0" : "-translate-y-[200%]"}`}
         >
           <div className="py-4 px-6">
-            <p className="text-xl text-center font-semibold">{banner.message}</p>
-            <p className="text-gray-700 text-lg text-center">View all of your matches <Link to='/matches' className="text-blue-500 font-semibold">here</Link>.</p>
+            <p className="text-xl text-center font-semibold">
+              {banner.message}
+            </p>
+            <p className="text-gray-700 text-lg text-center">
+              View all of your matches{" "}
+              <Link to="/matches" className="text-blue-500 font-semibold">
+                here
+              </Link>
+              .
+            </p>
           </div>
           <div
             className={`h-1 bg-green-400 transition-all duration-[5s] ease-linear ${banner.visible ? "w-0" : "w-full"}`}

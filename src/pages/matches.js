@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { unmatchUser } from "../functions";
 
 export default function Matches() {
-  const { user, matches, setMatches, loading, supabase } =
-    useAppContext();
+  const { user, matches, setMatches, loading, supabase } = useAppContext();
 
   useEffect(() => {
     document.title = "Matches | Hobby Hub";

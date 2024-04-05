@@ -111,7 +111,6 @@ export async function unmatchUser(supabase, user, match_id) {
     return;
   }
 
-
   // Attempt delete first way
   const { data_one, error_one } = await supabase
     .from("full-matches")
@@ -119,7 +118,7 @@ export async function unmatchUser(supabase, user, match_id) {
     .eq("user1_id", user.id)
     .eq("user2_id", match_id);
 
-  if(error_one) {
+  if (error_one) {
     console.log(error_one);
   }
 
@@ -130,7 +129,7 @@ export async function unmatchUser(supabase, user, match_id) {
     .eq("user1_id", match_id)
     .eq("user2_id", user.id);
 
-  if(error_two) {
+  if (error_two) {
     console.log(error_two);
   }
 }
