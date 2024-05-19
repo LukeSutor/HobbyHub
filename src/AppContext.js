@@ -19,7 +19,7 @@ export function AppProvider({ children }) {
     process.env.REACT_APP_SUPABASE_ANON_KEY,
   );
 
-  // Fetch and set user information
+  // Fetch and set user informatin
   useEffect(() => {
     console.log("AppProvider useEffect");
     setLoading(true);

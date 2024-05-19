@@ -109,27 +109,48 @@ export default function Landing() {
   // Landing page for unauthenticated users
   function unauthLanding() {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-semibold text-center mb-8">
-          Welcome to Hobby Hub
-        </h1>
-        <p className="text-lg text-center mb-6">
-          Hobby Hub is where connections are made through shared passions. Say
-          goodbye to aimless swiping and hello to meaningful interactions with
-          like-minded individuals.
-        </p>
-        <p className="text-lg text-center mb-6">
-          With Hobby Hub, finding friends, activity partners, or even romance is
-          as easy as swiping right on hobbies you love. Discover new interests,
-          expand your social circle, and embark on exciting adventures—all with
-          a simple swipe.
-        </p>
-        <p className="text-lg text-center mb-6">
-          Join our community today and start connecting with people who share
-          your enthusiasm for life. Hobby Hub: where connections flourish
-          through the joy of shared hobbies.
-        </p>
-      </div>
+      <div className="bg-gray-100 font-sans min-h-screen flex items-center justify-center">
+      <main className="container mx-auto px-4 py-16">
+        <section className="text-center mb-12">
+          <h2 className="text-5xl font-bold mb-4 text-gray-800">Welcome to Hobby Hub</h2>
+          <p className="text-xl text-gray-600 mb-6">
+            Hobby Hub is where connections are made through shared passions. Say goodbye to aimless swiping and hello to meaningful interactions with like-minded individuals.
+          </p>
+          <p className="text-xl text-gray-600 mb-6">
+            With Hobby Hub, finding friends, activity partners, or even romance is as easy as swiping right on hobbies you love. Discover new interests, expand your social circle, and embark on exciting adventures&mdash;all with a simple swipe.
+          </p>
+          <p className="text-xl text-gray-600 mb-8">
+            Join our community today and start connecting with people who share your enthusiasm for life. Hobby Hub: where connections flourish through the joy of shared hobbies.
+          </p>
+          <a href="/signup">
+            <button className="bg-blue-600 text-white px-8 py-4 rounded-full text-lg shadow-md hover:bg-blue-700 transition duration-300">
+              Join Now
+            </button>
+          </a>
+        </section>
+
+        <section className="flex flex-wrap justify-around">
+          <div className="w-full md:w-1/3 p-4">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-2xl font-semibold mb-2 text-gray-800">Discover New Interests</h3>
+              <p className="text-gray-600">Explore a variety of hobbies and find new passions. From outdoor adventures to creative arts, there&#39;s something for everyone.</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/3 p-4">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-2xl font-semibold mb-2 text-gray-800">Expand Your Social Circle</h3>
+              <p className="text-gray-600">Meet new people who share your interests. Whether you&#39;re looking for friends, activity partners, or more, you&#39;ll find them here.</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/3 p-4">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-2xl font-semibold mb-2 text-gray-800">Embark on Adventures</h3>
+              <p className="text-gray-600">Join events and activities that match your hobbies. From local meetups to virtual events, the adventures are endless.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
     );
   }
 
